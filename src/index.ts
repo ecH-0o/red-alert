@@ -25,6 +25,8 @@ app.post('/', (req: Request, res: Response) => {
   switch (data.type) {
     case 'confirmation':
       return res.send(confirmationToken);
+    case 'message_new':
+      return 'abcdefg';
     default:
       return res.end('ok');
   }
