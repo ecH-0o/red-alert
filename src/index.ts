@@ -16,7 +16,7 @@ app.listen(PORT, () => {
   console.log(`Сервер запущен на порту ${PORT}`);
 });
 
-app.post('/', (req: Request, res: Response) => {
+app.post('/', async (req: Request, res: Response) => {
   const data = req.body;
   if (!data || !data.type) {
     return res.end();
@@ -26,24 +26,17 @@ app.post('/', (req: Request, res: Response) => {
     case 'confirmation':
       return res.send(confirmationToken);
     case 'message_new':
-      return 'abcdefg';
+      const text = data.object?.message?.text?.toLowerCase();
+      if (text === 'a') {
+        await vk.api.messages.send({
+          peer_id: data.object.message.peer_id,
+          message: 'Ответ по Callback API',
+          random_id: Date.now()
+        });
+      }
+      return res.end('ok');
     default:
       return res.end('ok');
   }
 });
-
-// Подписываемся на событие "новое сообщение"
-vk.updates.on('message_new', async (context, next) => {
-  // Если это не системное сообщение, а именно пользовательское
-  if (context.isUser && context.text) {
-    // Например, если пользователь написал "Привет"
-    if (context.text.toLowerCase() === 'a') {
-      // Отправляем ответ в чат/ЛС
-      await context.send('хуй на');
-    }
-  }
-});
-
-// Запускаем Long Poll
-vk.updates.start().catch(console.error);
 
