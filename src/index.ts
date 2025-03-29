@@ -13,7 +13,7 @@ app.listen(PORT, () => {
 
 // Обработка входящих запросов
 app.post('/', (req: Request, res: Response) => {
-  console.log(req);
+  console.log(req.body);
   const data = req.body;
 
   if (!data || !data.type) {
