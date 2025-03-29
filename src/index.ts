@@ -18,7 +18,7 @@ app.post('/callback', (req: Request, res: Response) => {
   switch (data.type) {
     case 'confirmation':
       // Возвращаем строку для подтверждения (confirmationToken)
-      return res.send(confirmationToken);
+      return res.send("sdfksdjflksdjfsldkfjsl");
     default:
       // Если пришёл неизвестный тип, отвечаем чем-то формальным
       return res.end('ok');
