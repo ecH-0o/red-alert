@@ -11,26 +11,37 @@ const confirmationCode = '7c112053';
 const app = express();
 app.use(bodyParser.json()); // парсим JSON-тело
 
-app.post('/callback/vk', (req: Request, res: Response) => {
-  const { type, group_id } = req.body;
+app.post('/api/callback', async (req: Request, res: Response) => {
+  // Здесь req.body — входные данные
+  // можно "привести" к интерфейсу CallbackRequestBody, если надо:
+  // const body = req.body as CallbackRequestBody;
 
-  // Проверяем, что ВК шлёт запрос подтверждения
-  if (type === 'confirmation') {
-    // Можем дополнительно сверить group_id
-    if (group_id === 229906938) {
-      // Возвращаем тот самый confirmationCode
-      return res.send(confirmationCode);
-    } else {
-      return res.sendStatus(403);
-    }
-  }
+  const a: string = confirmationCode;
 
-  // Если это не "confirmation", значит событие реальное (например, message_new)
-  // Обработка...
-  
-  // По правилам ВК нужно отвечать "ok"
-  return res.send('ok');
+  // Указываем Content-Type: text/plain, чтобы вернуть чистую строку без кавычек
+  res.type('text/plain');
+  return res.send(a);
 });
+// app.post('/callback/vk', (req: Request, res: Response) => {
+//   const { type, group_id } = req.body;
+
+//   // Проверяем, что ВК шлёт запрос подтверждения
+//   if (type === 'confirmation') {
+//     // Можем дополнительно сверить group_id
+//     if (group_id === 229906938) {
+//       // Возвращаем тот самый confirmationCode
+//       return res.send(confirmationCode);
+//     } else {
+//       return res.sendStatus(403);
+//     }
+//   }
+
+//   // Если это не "confirmation", значит событие реальное (например, message_new)
+//   // Обработка...
+  
+//   // По правилам ВК нужно отвечать "ok"
+//   return res.send('ok');
+// });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
