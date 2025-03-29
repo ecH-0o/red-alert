@@ -6,8 +6,13 @@ app.use(express.json());
 // Токены
 const confirmationToken = '7c112053';
 
+app.listen(3000, () => {
+  console.log('Сервер запущен на порту 3000');
+});
+
 // Обработка входящих запросов
 app.post('/', (req: Request, res: Response) => {
+  console.log(req);
   const data = req.body;
 
   if (!data || !data.type) {
@@ -18,13 +23,11 @@ app.post('/', (req: Request, res: Response) => {
   switch (data.type) {
     case 'confirmation':
       // Возвращаем строку для подтверждения (confirmationToken)
-      return res.send("sdfksdjflksdjfsldkfjsl");
+      return res.send(confirmationToken);
     default:
       // Если пришёл неизвестный тип, отвечаем чем-то формальным
       return res.end('ok');
   }
 });
 
-app.listen(3000, () => {
-  console.log('Сервер запущен на порту 3000');
-});
+
