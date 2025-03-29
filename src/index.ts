@@ -21,22 +21,19 @@ app.post('/', async (req: Request, res: Response) => {
   }
 
   if (type === 'message_new') {
-    console.log('New message event:', object);
-    const text = object?.message?.text?.toLowerCase();
-    if (text === 'a') {
-      try {
-        await vk.api.messages.send({
-          peer_id: object.message.peer_id,
-          message: 'Ответ по Callback API',
-          random_id: Date.now()
-        });
-        console.log('Message sent successfully.');
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
+    const peerId = object.message.peer_id;
+    try {
+      await vk.api.messages.send({
+        peer_id: peerId,
+        message: 'Сообщение отправлено в этот чат!',
+        random_id: Date.now()
+      });
+    } catch (error) {
+      console.error('Ошибка отправки сообщения:', error);
     }
     return res.end('ok');
   }
+
   return res.end('ok');
 });
 
