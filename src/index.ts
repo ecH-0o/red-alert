@@ -7,7 +7,7 @@ app.use(express.json());
 const confirmationToken = '7c112053';
 
 // Обработка входящих запросов
-app.post('/callback', (req: Request, res: Response) => {
+app.post('/', (req: Request, res: Response) => {
   const data = req.body;
 
   if (!data || !data.type) {
