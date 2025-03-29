@@ -1,34 +1,30 @@
-import { VK } from 'vk-io';
 import { Request, Response } from 'express';
-
-
 const express = require('express');
-const bodyParser = require('body-parser');
-
-// ВАЖНО: это ваш confirmation код, который ВК требует вернуть
-const confirmationCode = '7c112053';
-
 const app = express();
-app.use(bodyParser.json()); // парсим JSON-тело
+app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+// Токены
+const confirmationToken = '7c112053';
+
+// Обработка входящих запросов
+app.post('/callback', (req: Request, res: Response) => {
+  const data = req.body;
+
+  if (!data || !data.type) {
+    // Если нет "type", просто завершаем
+    return res.end();
+  }
+
+  switch (data.type) {
+    case 'confirmation':
+      // Возвращаем строку для подтверждения (confirmationToken)
+      return res.send(confirmationToken);
+    default:
+      // Если пришёл неизвестный тип, отвечаем чем-то формальным
+      return res.end('ok');
+  }
 });
 
-app.post('/callback/vk', (req: Request, res: Response) => {
-      return res.send(confirmationCode);
+app.listen(3000, () => {
+  console.log('Сервер запущен на порту 3000');
 });
-
-
-// const vk = new VK({
-//   token: 'vk1.a.Aa8fXGArMpnErXAZU-plD2BgXEPWktN7wukiRbLejwR11DxeuEPshJPv0Agi1uBMzyu-GyNO6kmx6xpEedk7CSiMHflwBubk5xf13IlOcAJNBzt49UL_5ecZrDPHn2ELK_cQtZROAhyatYlu9ItFajrfzSGlfLVZkaggYCee0slTapMNrww2894nPug1xIyq5FFRCB20aoPhRm-C3ETyfw'
-// });
-
-// // Запускаем longpoll
-// vk.updates.start().catch(console.error);
-
-// vk.updates.on('message_new', async (context, next) => {
-//   // При получении нового сообщения отвечаем "Hello World!"
-//   await context.send('Hello World!');
-// });
