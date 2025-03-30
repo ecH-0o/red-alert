@@ -71,10 +71,31 @@ vk.updates.on('message_new', async (context) => {
     // Берем первый документ и получаем данные
     const userData = snapshot.docs[0].data();
     console.log(userData);
-    // Формируем сообщение с упоминанием пользователя
-    message += `Участник: [id${context.senderId}|${userData.name}]`;
-    message += `\n\nРоль: ${userData.role} ㅤ★ㅤ ${userData.fandom.name}`;
-    message += `\n\nТекущая локация: ${userData.current_location.location} в регионе ${userData.current_location.globalLocation.name}`;
+    
+    // Получаем данные из DocumentReference для fandom
+    let fandomData: any = {};
+    if (userData.fandom && typeof userData.fandom.get === 'function') {
+      const fandomSnap = await userData.fandom.get();
+      fandomData = fandomSnap.data() || {};
+    }
+
+    // Получаем данные из DocumentReference для current_location
+    let locationData: any = {};
+    if (userData.current_location && typeof userData.current_location.get === 'function') {
+      const locationSnap = await userData.current_location.get();
+      locationData = locationSnap.data() || {};
+    }
+
+    // Получаем данные из DocumentReference для current_location
+    let globalLocationData: any = {};
+    if (locationData.globalLocation && typeof locationData.globalLocation.get === 'function') {
+      const globalLocationSnap = await locationData.globalLocation.get();
+      globalLocationData = globalLocationSnap.data() || {};
+    }
+
+    message += `Участник: [id${context.senderId}|${userData.name}]\n\n`;
+    message += `Роль: ${userData.role} ㅤ★ㅤ ${fandomData.name || 'Нет данных'}\n\n`;
+    message += `Текущая локация: ${locationData.location || 'не указана'} в регионе ${globalLocationData.name || 'не указана'}`;
   } else {
     message = 'Пользователь не найден в базе.';
   }
