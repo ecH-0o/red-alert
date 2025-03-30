@@ -88,14 +88,14 @@ vk.updates.on('message_new', async (context) => {
 
       // Получаем документ глобальной локации (из поля locationData.global_location)
       let globalLocationData: any = {};
-      if (locationData.global_location) {
-        const globalLocationSnap = await locationData.global_location.get();
+      if (locationData.globalLocation) {
+        const globalLocationSnap = await locationData.globalLocation.get();
         globalLocationData = globalLocationSnap.data() || {};
       }
 
       message += `Участник: [id${context.senderId}|${userData.name}]\n\n`;
       message += `Роль: ${userData.role} ㅤ★ㅤ ${fandomData.name || 'Нет данных'}\n\n`;
-      message += `Текущая локация: ${locationData.location || 'не указана'} в регионе ${globalLocationData.name || 'не указана'}`;
+      message += `Текущая локация: ${locationData.location || 'Мы не знаем'} в регионе ${globalLocationData.name || 'мы не знаем'}`;
     } else {
       message = 'Пользователь не найден в базе.';
     }
