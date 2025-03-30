@@ -63,6 +63,7 @@ vk.updates.on('message_new', async (context) => {
   if (payload && payload.action === 'show_details') {
     let message = ''
     await db.collection('users').where("vkID", "==", context.senderId).get().then(async (user: any) => {
+      console.log(user);
       if (user) {
         message+= `Участник: [id${context.senderId}|${user[0].name}]`;
         message+= `\n\nРоль: ${user[0].role}ㅤ★ㅤ${user[0].fandom.name}]`;
