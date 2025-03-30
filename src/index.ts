@@ -61,17 +61,26 @@ vk.updates.on('message_new', async (context) => {
   }
   // Если пришло сообщение с payload (нажатие на кнопку)
   if (payload && payload.action === 'show_details') {
-    let message = ''
-    await db.collection('users').where("vkID", "==", context.senderId).get().then(async (user: any) => {
-      console.log(user);
-      if (user) {
-        message+= `Участник: [id${context.senderId}|${user[0].name}]`;
-        message+= `\n\nРоль: ${user[0].role}ㅤ★ㅤ${user[0].fandom.name}]`;
-        message+= `\n\nТекущая локация: ${user[0].current_location.location} в регионе ${user[0].current_location.globalLocation.name}]`;
-      }
-    });
-    await context.send(message);
-    return;
+    let message = '';
+    const snapshot = await db
+    .collection('users')
+    .where('vkID', '==', context.senderId)
+    .get();
+
+  if (!snapshot.empty) {
+    // Берем первый документ и получаем данные
+    const userData = snapshot.docs[0].data();
+
+    // Формируем сообщение с упоминанием пользователя
+    message += `Участник: [id${context.senderId}|${userData.name}]`;
+    message += `\n\nРоль: ${userData.role} ㅤ★ㅤ ${userData.fandom.name}`;
+    message += `\n\nТекущая локация: ${userData.current_location.location} в регионе ${userData.current_location.globalLocation.name}`;
+  } else {
+    message = 'Пользователь не найден в базе.';
+  }
+
+  await context.send(message);
+  return;
   }
 });
 
