@@ -70,7 +70,7 @@ vk.updates.on('message_new', async (context) => {
   if (!snapshot.empty) {
     // Берем первый документ и получаем данные
     const userData = snapshot.docs[0].data();
-
+    console.log(userData);
     // Формируем сообщение с упоминанием пользователя
     message += `Участник: [id${context.senderId}|${userData.name}]`;
     message += `\n\nРоль: ${userData.role} ㅤ★ㅤ ${userData.fandom.name}`;
