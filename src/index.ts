@@ -24,27 +24,39 @@ const db = admin.firestore();
 const vk = new VK({
   token: process.env.VK_TOKEN || 'placeholder'
 });
+const mentionRegex = /\[id(\d+)\|[^\]]+\]/g;
 
 // Обработчик новых сообщений через Long Poll API
 vk.updates.on('message_new', async (context) => {
   console.log(`Получено сообщение от peer_id ${context.peerId}: ${context.text}`);
 
   // Если текст равен 'a' (без учета регистра), отправляем ответ
-  if (context.text && context.text.toLowerCase() === 'ф') {
-     // Запрос данных из коллекции (замените 'your_collection_name' на имя вашей коллекции)
-     const snapshot = await db.collection('users').get();
-    const user = await vk.api.users.get({user_ids: [context.senderId]})
-     let result = '';
-     if (user.length > 0) {
-      result += JSON.stringify(user[0]);
-     }
-    //  snapshot.forEach(doc => {
+  if (context.text && context.text.startsWith('[id')) {
+    let result = '';
+    const matches = context.text.match(mentionRegex);
+    if (matches) {
+      matches.forEach((match) => {
+        const [, id] = match.match(/\[id(\d+)\|/) || [];
+        result = 'Упомянутый ID: ' + id;
+      });
+    }
+    //  // Запрос данных из коллекции (замените 'your_collection_name' на имя вашей коллекции)
+    //  const snapshot = await db.collection('users').where(
+    //   "vkID", "==", context.senderId
+    //  ).get();
+    // //const user = await vk.api.users.get({user_ids: [context.senderId]})
+    //  let result = '';
+    //  if (user.length > 0) {
+    //   result += context.text;
+    //   result += JSON.stringify(user[0]);
+    //  }
+    // //  snapshot.forEach(doc => {
       
-    //  });
+    // //  });
 
-     if (!result) {
-       result = 'База пуста.';
-     }
+    //  if (!result) {
+    //    result = 'База пуста.';
+    //  }
     try {
       await context.send(result);
       console.log(`Ответ отправлен в чат с peer_id ${context.peerId}`);
