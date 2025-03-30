@@ -31,7 +31,7 @@ vk.updates.on('message_new', async (context) => {
   console.log(`Получено сообщение от peer_id ${context.peerId}: ${context.text}`);
 
   // Если текст равен 'a' (без учета регистра), отправляем ответ
-  if (context.text && context.text.toLowerCase() === 'a') {
+  if (context.text && context.text.toLowerCase() === 'ф') {
      // Запрос данных из коллекции (замените 'your_collection_name' на имя вашей коллекции)
      const snapshot = await db.collection('users').get();
       
