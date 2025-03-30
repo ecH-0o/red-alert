@@ -3,10 +3,16 @@ import { VK } from 'vk-io';
 import admin from 'firebase-admin';
 import 'dotenv/config';
 
-
+const base64Key = process.env.FIREBASE_SERVICE_ACCOUNT;
+if (!base64Key) {
+  throw new Error('FIREBASE_SERVICE_ACCOUNT not set');
+}
+const serviceAccount = JSON.parse(
+  Buffer.from(base64Key, 'base64').toString('utf8')
+);
 // Инициализируем Firebase Admin SDK
 admin.initializeApp({
-  credential: admin.credential.cert(process.env.FIREBASE_SERVICE_ACCOUNT as admin.ServiceAccount),
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
   databaseURL: 'https://red-alert-1748e.firebaseio.com'  // замените на URL вашей базы
 });
 const app = express();
