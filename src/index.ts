@@ -36,7 +36,7 @@ vk.updates.on('message_new', async (context) => {
     const user = vk.api.users.get({user_ids: [context.senderId]})
      let result = '';
      snapshot.forEach(doc => {
-       result += JSON.stringify(user);
+       result += user;
      });
 
      if (!result) {
