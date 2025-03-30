@@ -1,13 +1,12 @@
 import express from 'express';
 import { VK } from 'vk-io';
 import admin from 'firebase-admin';
-import serviceAccount from '../serviceAccountKey.json';
 import 'dotenv/config';
 
 
 // Инициализируем Firebase Admin SDK
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+  credential: admin.credential.cert(process.env.FIREBASE_SERVICE_ACCOUNT as admin.ServiceAccount),
   databaseURL: 'https://red-alert-1748e.firebaseio.com'  // замените на URL вашей базы
 });
 const app = express();
