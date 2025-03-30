@@ -1,6 +1,7 @@
 import express from 'express';
 import { VK } from 'vk-io';
 import admin from 'firebase-admin';
+import { getData } from './utils/utils'; // Импортируем функцию из utils.ts
 
 const base64Key = process.env.FIREBASE_SERVICE_ACCOUNT;
 if (!base64Key) {
@@ -25,83 +26,24 @@ const vk = new VK({
   token: process.env.VK_TOKEN || 'placeholder'
 });
 
-const keyboard = {
-  one_time: false, // клавиатура останется на экране после нажатия кнопки
-  buttons: [
-    [
-      {
-        action: {
-          type: 'text',
-          payload: JSON.stringify({ action: 'show_details' }),
-          label: 'нажать'
-        },
-        color: 'primary'
-      },
-    ]
-  ]
-};
-
 
 // Обработчик новых сообщений через Long Poll API
 vk.updates.on('message_new', async (context) => {
   console.log(`Получено сообщение от peer_id ${context.peerId}: ${context.text}`);
-  const payload = context.messagePayload; // или context.getMessagePayload()
-  // Если текст равен 'a' (без учета регистра), отправляем ответ
-  if (context.text && context.text.startsWith('ф')) {
-
+  if (context.text && context.text.startsWith('инфа [id')) {
+    const regex = /\[id(\d+)\|/;
+    const match = context.text.match(regex);
+    const foundId = match ? match[1] : 0;
+    const result = await getData(db, context, foundId);
+    
     try {
       await context.send({
-        message: 'жми на рычаг',
-        keyboard: JSON.stringify(keyboard)
+        message: result,
       });
       console.log(`Ответ отправлен в чат с peer_id ${context.peerId}`);
     } catch (error) {
       console.error('Ошибка при отправке сообщения:', error);
     }
-  }
-  // Если пришло сообщение с payload (нажатие на кнопку)
-  if (payload && payload.action === 'show_details') {
-    let message = '';
-    const snapshot = await db
-      .collection('users')
-      .where('vkID', '==', context.senderId)
-      .get();
-
-    if (!snapshot.empty) {
-      // Берем первый документ и получаем данные
-      const userData = snapshot.docs[0].data();
-      console.log(userData);
-
-      // Получаем данные из DocumentReference для fandom
-      let fandomData: any = {};
-      if (userData.fandom && typeof userData.fandom.get === 'function') {
-        const fandomSnap = await userData.fandom.get();
-        fandomData = fandomSnap.data() || {};
-      }
-
-      // Получаем данные из DocumentReference для current_location
-      let locationData: any = {};
-      if (userData.current_location && typeof userData.current_location.get === 'function') {
-        const locationSnap = await userData.current_location.get();
-        locationData = locationSnap.data() || {};
-      }
-
-      // Получаем документ глобальной локации (из поля locationData.global_location)
-      let globalLocationData: any = {};
-      if (locationData.globalLocation) {
-        const globalLocationSnap = await locationData.globalLocation.get();
-        globalLocationData = globalLocationSnap.data() || {};
-      }
-
-      message += `Участник: [id${context.senderId}|${userData.name}]\n\n`;
-      message += `Роль: ${userData.role} ㅤ★ㅤ ${fandomData.name || 'Нет данных'}\n\n`;
-      message += `Текущая локация: ${locationData.location || 'Мы не знаем'} в регионе ${globalLocationData.name || 'мы не знаем'}`;
-    } else {
-      message = 'Пользователь не найден в базе.';
-    }
-
-    await context.send(message);
-    return;
   }
 });
 
