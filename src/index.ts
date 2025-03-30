@@ -33,11 +33,14 @@ vk.updates.on('message_new', async (context) => {
   if (context.text && context.text.toLowerCase() === 'ф') {
      // Запрос данных из коллекции (замените 'your_collection_name' на имя вашей коллекции)
      const snapshot = await db.collection('users').get();
-    const user = vk.api.users.get({user_ids: [context.senderId]})
+    const user = await vk.api.users.get({user_ids: [context.senderId]})
      let result = '';
-     snapshot.forEach(doc => {
-       result += user;
-     });
+     if (user.length > 0) {
+      result += user[0];
+     }
+    //  snapshot.forEach(doc => {
+      
+    //  });
 
      if (!result) {
        result = 'База пуста.';
