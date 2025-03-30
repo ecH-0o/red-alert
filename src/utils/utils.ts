@@ -35,7 +35,9 @@ export const getData = async (db: any, context: any, userId: any): Promise<strin
 
       message += `Участник: [id${context.senderId}|${userData.name}]\n\n`;
       message += `Роль: ${userData.role} ㅤ★ㅤ ${fandomData.name || 'Нет данных'}\n\n`;
-      message += `Текущая локация: ${locationData.location || 'Мы не знаем'} в регионе ${globalLocationData.name || 'мы не знаем'}`;
+      message += `Текущая локация: ${locationData.location || 'Мы не знаем'}`;
+      message += `Регион: ${globalLocationData.name || 'Мы не знаем'}`;
+
     } else {
       message = 'Пользователь не найден в базе.';
     }

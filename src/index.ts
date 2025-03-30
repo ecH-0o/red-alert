@@ -33,7 +33,9 @@ vk.updates.on('message_new', async (context) => {
   if (context.text && context.text.startsWith('инфа [id')) {
     const regex = /\[id(\d+)\|/;
     const match = context.text.match(regex);
-    const foundId = match ? match[1] : 0;
+    const foundId = match ? match[0] : 0;
+    console.log(match);
+    console.log(foundId);
     const result = await getData(db, context, foundId);
     
     try {
