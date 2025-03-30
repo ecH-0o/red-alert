@@ -6,7 +6,7 @@ const app = express();
 // Инициализируйте vk-io с токеном сообщества.
 // Рекомендуется хранить токен в переменной окружения (VK_TOKEN)
 const vk = new VK({
-  token: process.env.VK_TOKEN || 'vk1.a.Aa8fXGArMpnErXAZU-plD2BgXEPWktN7wukiRbLejwR11DxeuEPshJPv0Agi1uBMzyu-GyNO6kmx6xpEedk7CSiMHflwBubk5xf13IlOcAJNBzt49UL_5ecZrDPHn2ELK_cQtZROAhyatYlu9ItFajrfzSGlfLVZkaggYCee0slTapMNrww2894nPug1xIyq5FFRCB20aoPhRm-C3ETyfw'
+  token: process.env.VK_TOKEN || 'vk1.a.I9jMXprw-Y2n9jD1QrtPG5-OT3kblogrwDOpIkRNgPV3BIJBvn83ocWePJIhMEJeFnepm4qnFePrgJKouzCsbLZ4PYtJwBad9pRZuRRlj6kZ0alUhEcDKx3lZgqEuVnm0urJiQMOsmegTFnvmudv4_u2fPPiKYkby3g1MMyKJX3bQGsg_e2PSIMmOVLc2TJRvUnikKBMtsRtmnqVqohBdA'
 });
 
 // Обработчик новых сообщений через Long Poll API
