@@ -125,6 +125,12 @@ dist
 # TernJS port file
 .tern-port
 
+# Исключаем ключи Firebase (имя файла)
+serviceAccountKey.json
+
+# На случай, если используете переменные окружения
+.env
+
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
