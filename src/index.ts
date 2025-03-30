@@ -36,7 +36,7 @@ vk.updates.on('message_new', async (context) => {
       
      let result = '';
      snapshot.forEach(doc => {
-       result += context;
+       result += JSON.stringify(context);
      });
 
      if (!result) {
