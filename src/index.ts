@@ -1,10 +1,6 @@
 import express from 'express';
 import { VK } from 'vk-io';
 import admin from 'firebase-admin';
-import 'dotenv/config';
-
-console.log('VK_TOKEN:', process.env.VK_TOKEN);
-console.log('FIREBASE_SERVICE_ACCOUNT:', process.env.FIREBASE_SERVICE_ACCOUNT);
 
 const base64Key = process.env.FIREBASE_SERVICE_ACCOUNT;
 if (!base64Key) {
